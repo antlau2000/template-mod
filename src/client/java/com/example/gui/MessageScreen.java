@@ -1,11 +1,14 @@
 package com.example.gui;
 
+import com.example.Messages;
 import com.example.client.TemplateModClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
+
+import static com.example.client.TemplateModClient.sendMessageToServer;
 
 public class MessageScreen extends Screen {
     private TextFieldWidget textField;
@@ -40,9 +43,26 @@ public class MessageScreen extends Screen {
 
     private void sendMessage() {
         String messageText = this.textField.getText();
+        if (messageText.isEmpty()) {
+            return;
+        }
+
         TemplateModClient.LOGGER.info("Sending message: {}", messageText);
 
-        // TODO: Здесь будет отправка через Protobuf
+        try {
+            Messages.Message message = Messages.Message.newBuilder()
+                    .setText(messageText)
+                    .build();
+
+            byte[] data = message.toByteArray();
+            TemplateModClient.LOGGER.info("Message serialized, size: {} bytes", data.length);
+
+            // Отправляем через сеть
+            sendMessageToServer(data);
+
+        } catch (Exception e) {
+            TemplateModClient.LOGGER.error("Failed to send message", e);
+        }
 
         this.close();
     }

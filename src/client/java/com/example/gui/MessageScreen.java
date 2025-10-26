@@ -57,7 +57,6 @@ public class MessageScreen extends Screen {
             byte[] data = message.toByteArray();
             TemplateModClient.LOGGER.info("Message serialized, size: {} bytes", data.length);
 
-            // Отправляем через сеть
             sendMessageToServer(data);
 
         } catch (Exception e) {

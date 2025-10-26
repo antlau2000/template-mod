@@ -11,18 +11,17 @@ public class NetworkHandler {
         ServerPlayNetworking.registerGlobalReceiver(MessagePayload.ID, (payload, context) -> {
             byte[] data = payload.data();
 
-            try (var server = context.server()) {
-                server.execute(() -> {
-                    try {
-                        Messages.Message message = Messages.Message.parseFrom(data);
-                        TemplateMod.LOGGER.info("Received message from {}: {}",
-                                context.player().getGameProfile().getName(),
-                                message.getText());
-                    } catch (InvalidProtocolBufferException e) {
-                        TemplateMod.LOGGER.error("Failed to parse message", e);
-                    }
-                });
-            }
+            var server = context.server();
+            server.execute(() -> {
+                try {
+                    Messages.Message message = Messages.Message.parseFrom(data);
+                    TemplateMod.LOGGER.info("Received message from {}: {}",
+                            context.player().getGameProfile().getName(),
+                            message.getText());
+                } catch (InvalidProtocolBufferException e) {
+                    TemplateMod.LOGGER.error("Failed to parse message", e);
+                }
+            });
         });
     }
 }

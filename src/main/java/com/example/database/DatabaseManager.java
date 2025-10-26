@@ -1,10 +1,13 @@
 package com.example.database;
 
 import com.example.entity.MessageEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+@Environment(EnvType.SERVER)
 public class DatabaseManager {
     private static SessionFactory sessionFactory;
 
